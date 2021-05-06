@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import exceptions  
 from playsound import playsound
+import os
 
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -13,7 +14,8 @@ import os
 import time
 import pandas as pd
 
-def startCowinDriver():
+def setupCowinDriver():
+    global driver
     driver = webdriver.Chrome(ChromeDriverManager().install())
     driver.maximize_window()
 
@@ -68,6 +70,8 @@ def startCowinDriver():
 
     time.sleep(1)
 
+
+def startCowinDriver():
     driver.find_element_by_xpath('//button[normalize-space()="Search"]').click()
 
     time.sleep(2)
@@ -102,7 +106,7 @@ def startCowinDriver():
     #Ignore Centers
     ignore_centers = []
 
-    ignore_centers.append("APOLLO HOSPITAL 1 Paid")
+    #ignore_centers.append("APOLLO HOSPITAL 1 Paid")
     
 
     for ul in uls:
@@ -122,6 +126,7 @@ def startCowinDriver():
                     if vaccine_centers[row_count].strip() not in ignore_centers:
                         print("Playing Alarm!!!!")
                         playsound("alarm_trim.wav")
+                        os.system("python test_chromecast.py")
                     else:
                         print(vaccine_centers[row_count].strip(), " ignored")
 
@@ -144,6 +149,8 @@ def startCowinDriver():
 
 
 
+setupCowinDriver()
+
 while(1):
     startCowinDriver()
-    time.sleep(60)
+    time.sleep(1)
